@@ -9,11 +9,11 @@
 #define min(a, b) ((a)<(b) ? (a) : (b))
 #define max(a, b) ((a)>(b) ? (a) : (b))
 
-#define NUM_BOMBS 20
-#define NUM_FAIRIES 20
+#define NUM_BOMBS 5
+#define NUM_FAIRIES 5
 
-#define WIDTH  12
-#define HEIGHT 12
+#define WIDTH  6
+#define HEIGHT 6
 
 #define StaticArraySize(arr) ((sizeof(arr) / sizeof((arr)[0])))
 
@@ -27,7 +27,8 @@ enum {
     COLOR_UNKNOWN_CELL_OUTLINE = 0x5c3030ff,
     COLOR_EMPTY_CELL           = 0x291414ff,
     COLOR_TEXT                 = 0x875b5bff,
-    COLOR_TEXT_FAIRY           = 0xe6c38cff,
+    COLOR_TEXT_FAIRY           = COLOR_TEXT,
+    //COLOR_TEXT_FAIRY           = 0xe6c38cff,
 } color_theme;
 
 typedef enum {
