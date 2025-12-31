@@ -6,14 +6,19 @@
 #include <assert.h>
 #include <time.h>
 
-#define min(a, b) ((a)<(b) ? (a) : (b))
-#define max(a, b) ((a)>(b) ? (a) : (b))
+#ifndef min
+  #define min(a, b) ((a)<(b) ? (a) : (b))
+#endif
 
-#define NUM_BOMBS 5
-#define NUM_FAIRIES 5
+#ifndef max
+  #define max(a, b) ((a)>(b) ? (a) : (b))
+#endif
 
-#define WIDTH  6
-#define HEIGHT 6
+#define NUM_BOMBS 9
+#define NUM_FAIRIES 9
+
+#define WIDTH  9
+#define HEIGHT 9
 
 #define StaticArraySize(arr) ((sizeof(arr) / sizeof((arr)[0])))
 
@@ -27,8 +32,8 @@ enum {
     COLOR_UNKNOWN_CELL_OUTLINE = 0x5c3030ff,
     COLOR_EMPTY_CELL           = 0x291414ff,
     COLOR_TEXT                 = 0x875b5bff,
-    COLOR_TEXT_FAIRY           = COLOR_TEXT,
-    //COLOR_TEXT_FAIRY           = 0xe6c38cff,
+    //COLOR_TEXT_FAIRY           = COLOR_TEXT,
+    COLOR_TEXT_FAIRY           = 0xe6c38cff,
 } color_theme;
 
 typedef enum {
@@ -261,7 +266,7 @@ void click(grid_t *grid, int x, int y) {
                 cell_t *neighbour = get_cell(grid, p.x, p.y);
 
                 if (in_bounds(p.x, p.y, w, h)) {
-                    if (!neighbour->type == CELL_MINE && !neighbour->visited) {
+                    if (neighbour->type == CELL_CLEAR && !neighbour->visited) {
                         index_queue[++tail] = p.x + p.y * w;
                     }
 
@@ -360,6 +365,7 @@ after_loop:
         switch (grid->grid[i].flag) {
             case FLAG_FAIRY: grid->num_seen_fairies++; break;
             case FLAG_MINE:  grid->num_flags++; break;
+            default: break;
         }
     }
 
@@ -429,6 +435,8 @@ void grid_draw(assets_t *assets, grid_t *grid, panel_t *screen) {
                         case CELL_FAIRY:
                             draw_texture_on_cell(rect, assets->fairy, false);
                             break;
+                        default:
+                            break;
                     }
                 } else if (cell->neighbours) {
                     const char *str = 0;
@@ -466,6 +474,7 @@ void grid_draw(assets_t *assets, grid_t *grid, panel_t *screen) {
                 switch (cell->flag) {
                     case FLAG_FAIRY: draw_texture_on_cell(rect, assets->fairy_flag, flash); break;
                     case FLAG_MINE:  draw_texture_on_cell(rect, assets->flag, flash); break;
+                    default: break;
                 }
             }
         }
@@ -595,6 +604,7 @@ void app_cleanup(app_t *app) {
 
 int main(void) {
     app_t app = {};
+
     app_init(&app);
 
     while (!WindowShouldClose()) {
@@ -605,4 +615,6 @@ int main(void) {
     }
 
     app_cleanup(&app);
+
+    return 0;
 }
